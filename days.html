@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>拾光足跡 | 重要日子倒數與紀念</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #0f172a;
+      --muted: #64748b;
+      --primary: #4f46e5;
+      --primary-hover: #4338ca;
+      --primary-light: #eef2ff;
+      --border: #e2e8f0;
+      --danger: #ef4444;
+      --danger-light: #fef2f2;
+      --countdown-color: #0284c7;
+      --countdown-bg: #f0f9ff;
+      --past-color: #7c3aed;
+      --past-bg: #f5f3ff;
+      --today-color: #059669;
+      --today-bg: #ecfdf5;
+      --radius: 14px;
+      --shadow: 0 4px 18px -2px rgba(15, 23, 42, 0.05);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Noto Sans TC', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+    .container { max-width: 760px; margin: 0 auto; padding: 2.5rem 1.25rem 4rem; }
+    .nav-bar { margin-bottom: 2rem; }
+    .back-link {
+      display: inline-flex; align-items: center; gap: 6px; color: var(--muted);
+      text-decoration: none; font-size: 0.92rem; font-weight: 500;
+      padding: 6px 12px; background: #fff; border: 1px solid var(--border);
+      border-radius: 999px; transition: all 0.2s;
+    }
+    .back-link:hover { color: var(--primary); border-color: #c7d2fe; background: var(--primary-light); }
+    .header { margin-bottom: 2rem; }
+    .header h1 { font-size: 2rem; font-weight: 700; color: #0f172a; display: flex; align-items: center; gap: 10px; }
+    .header p { color: var(--muted); font-size: 0.95rem; margin-top: 4px; }
+    .form-card {
+      background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+      box-shadow: var(--shadow); padding: 1.5rem; margin-bottom: 2rem;
+    }
+    .form-title { font-size: 1.05rem; font-weight: 700; margin-bottom: 1rem; color: #1e293b; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+    @media (max-width: 580px) { .form-grid { grid-template-columns: 1fr; } }
+    .form-group label { display: block; font-size: 0.85rem; font-weight: 600; color: #475569; margin-bottom: 6px; }
+    .form-input {
+      width: 100%; padding: 9px 12px; font-size: 0.95rem; border: 1px solid var(--border);
+      border-radius: 8px; background: #f8fafc; font-family: inherit;
+    }
+    .form-input:focus { outline: none; border-color: var(--primary); background: #ffffff; }
+    .form-checkbox-row {
+      display: flex; align-items: center; gap: 8px; margin-bottom: 1.25rem;
+      cursor: pointer; font-size: 0.9rem; color: #334155;
+    }
+    .form-checkbox-row input[type="checkbox"] { width: 17px; height: 17px; accent-color: var(--primary); cursor: pointer; }
+    .btn-submit {
+      width: 100%; background: var(--primary); color: #fff; border: none; border-radius: 9px;
+      padding: 11px 18px; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: background 0.2s;
+    }
+    .btn-submit:hover { background: var(--primary-hover); }
+    .list-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+    .list-title { font-size: 1.05rem; font-weight: 700; color: #1e293b; }
+    .list-count { font-size: 0.8rem; color: var(--muted); background: #e2e8f0; padding: 2px 8px; border-radius: 999px; }
+    .events-list { display: flex; flex-direction: column; gap: 1rem; }
+    .event-card {
+      background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+      box-shadow: var(--shadow); padding: 1.25rem 1.5rem; display: flex; align-items: center;
+      justify-content: space-between; gap: 1rem;
+    }
+    .event-info { flex: 1; min-width: 0; }
+    .event-name-row { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; flex-wrap: wrap; }
+    .event-title { font-size: 1.1rem; font-weight: 700; color: #0f172a; }
+    .recurring-tag { font-size: 0.72rem; font-weight: 600; padding: 2px 7px; border-radius: 4px; background: #f1f5f9; color: #64748b; }
+    .event-date { font-size: 0.85rem; color: var(--muted); }
+    .event-calc { text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+    .calc-badge { display: inline-flex; align-items: baseline; gap: 4px; padding: 6px 12px; border-radius: 8px; font-weight: 700; }
+    .calc-badge.countdown { background: var(--countdown-bg); color: var(--countdown-color); }
+    .calc-badge.past { background: var(--past-bg); color: var(--past-color); }
+    .calc-badge.today { background: var(--today-bg); color: var(--today-color); }
+    .calc-number { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; font-size: 1.35rem; line-height: 1; }
+    .calc-label { font-size: 0.88rem; }
+    .btn-delete {
+      background: none; border: none; color: #94a3b8; cursor: pointer;
+      padding: 4px 8px; border-radius: 6px; font-size: 0.85rem;
+      display: inline-flex; align-items: center; gap: 4px; transition: all 0.2s;
+    }
+    .btn-delete:hover { color: var(--danger); background: var(--danger-light); }
+    .empty-state {
+      text-align: center; padding: 3rem 1rem; background: var(--card);
+      border: 1px dashed var(--border); border-radius: var(--radius); color: var(--muted);
+    }
+    .empty-icon { font-size: 2.5rem; margin-bottom: 0.5rem; }
+    @media (max-width: 580px) {
+      .event-card { flex-direction: column; align-items: flex-start; }
+      .event-calc {
+        width: 100%; flex-direction: row; justify-content: space-between;
+        align-items: center; border-top: 1px solid #f1f5f9; padding-top: 0.75rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="app" class="container">
+    <div class="nav-bar">
+      <a href="index.html" class="back-link">
+        <span>←</span>
+        <span>返回我的工具箱</span>
+      </a>
+    </div>
+
+    <header class="header">
+      <h1><span>📅</span> 拾光足跡</h1>
+      <p>記錄走過的時光，倒數期盼的未來。自動計算重要日子天數。</p>
+    </header>
+
+    <!-- 新增事件表單 -->
+    <section class="form-card">
+      <div class="form-title">➕ 新增重要日子</div>
+      <form @submit.prevent="addEvent">
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="eventName">事件名稱</label>
+            <input
+              id="eventName"
+              v-model.trim="form.name"
+              type="text"
+              class="form-input"
+              placeholder="例如：生日、交往紀念日、畢業倒數"
+              required
+            >
+          </div>
+          <div class="form-group">
+            <label for="eventDate">選擇日期</label>
+            <input
+              id="eventDate"
+              v-model="form.date"
+              type="date"
+              class="form-input"
+              required
+            >
+          </div>
+        </div>
+
+        <label class="form-checkbox-row">
+          <input v-model="form.isRecurring" type="checkbox">
+          <span>每年循環（如生日、結婚紀念日，每年自動計算倒數）</span>
+        </label>
+
+        <button type="submit" class="btn-submit">
+          新增日子
+        </button>
+      </form>
+    </section>
+
+    <!-- 事件清單 -->
+    <section>
+      <div class="list-header">
+        <div class="list-title">我的日子</div>
+        <span class="list-count">{{ events.length }} 個事件</span>
+      </div>
+
+      <div v-if="events.length === 0" class="empty-state">
+        <div class="empty-icon">🍃</div>
+        <p>目前尚未建立任何重要日子，快在上方新增第一個吧！</p>
+      </div>
+
+      <div v-else class="events-list">
+        <div
+          v-for="item in computedEvents"
+          :key="item.id"
+          class="event-card"
+        >
+          <div class="event-info">
+            <div class="event-name-row">
+              <span class="event-title">{{ item.name }}</span>
+              <span v-if="item.isRecurring" class="recurring-tag">🔄 每年循環</span>
+            </div>
+            <div class="event-date">
+              <span>基準日期：{{ item.date }}</span>
+              <span v-if="item.isRecurring && item.subNote"> · {{ item.subNote }}</span>
+            </div>
+          </div>
+
+          <div class="event-calc">
+            <div :class="['calc-badge', item.calcType]">
+              <span v-if="item.calcType === 'today'" class="calc-label">🎉 就是今天！</span>
+              <template v-else>
+                <span class="calc-label">{{ item.prefixText }}</span>
+                <span class="calc-number">{{ item.diffDays }}</span>
+                <span class="calc-label">天</span>
+              </template>
+            </div>
+            <button
+              type="button"
+              class="btn-delete"
+              title="刪除此事件"
+              @click="deleteEvent(item.id)"
+            >
+              <span>🗑️</span>
+              <span>刪除</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const { createApp, ref, computed, onMounted } = Vue;
+
+    createApp({
+      setup() {
+        const defaultEvents = [
+          { id: 1, name: '2027新年倒數', date: '2027-01-01', isRecurring: false },
+          { id: 2, name: '我的生日', date: '2000-09-15', isRecurring: true },
+          { id: 3, name: '開始學 Vue', date: '2024-01-01', isRecurring: false }
+        ];
+
+        const events = ref([]);
+        const form = ref({
+          name: '',
+          date: '',
+          isRecurring: false
+        });
+
+        const STORAGE_KEY = 'days_tracker_events_data';
+
+        const saveToStorage = () => {
+          try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(events.value));
+          } catch (e) {
+            console.error(e);
+          }
+        };
+
+        onMounted(() => {
+          const saved = localStorage.getItem(STORAGE_KEY);
+          if (saved) {
+            try {
+              events.value = JSON.parse(saved);
+            } catch (e) {
+              events.value = defaultEvents;
+            }
+          } else {
+            events.value = defaultEvents;
+            saveToStorage();
+          }
+        });
+
+        const addEvent = () => {
+          if (!form.value.name || !form.value.date) return;
+          events.value.unshift({
+            id: Date.now(),
+            name: form.value.name,
+            date: form.value.date,
+            isRecurring: form.value.isRecurring
+          });
+          saveToStorage();
+          form.value.name = '';
+          form.value.date = '';
+          form.value.isRecurring = false;
+        };
+
+        const deleteEvent = (id) => {
+          events.value = events.value.filter(e => e.id !== id);
+          saveToStorage();
+        };
+
+        const computedEvents = computed(() => {
+          const now = new Date();
+          const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+          const msPerDay = 1000 * 60 * 60 * 24;
+
+          return events.value.map(item => {
+            const parts = item.date.split('-');
+            const year = parseInt(parts[0], 10);
+            const month = parseInt(parts[1], 10) - 1;
+            const day = parseInt(parts[2], 10);
+
+            const targetDate = new Date(year, month, day);
+
+            if (item.isRecurring) {
+              const currentYearOccurrence = new Date(today.getFullYear(), month, day);
+              const diffMs = currentYearOccurrence.getTime() - today.getTime();
+              const diffDaysToday = Math.round(diffMs / msPerDay);
+
+              if (diffDaysToday === 0) {
+                return {
+                  ...item,
+                  calcType: 'today',
+                  prefixText: '',
+                  diffDays: 0,
+                  subNote: '每年今日'
+                };
+              } else if (diffDaysToday > 0) {
+                return {
+                  ...item,
+                  calcType: 'countdown',
+                  prefixText: '還有',
+                  diffDays: diffDaysToday,
+                  subNote: `今年：${today.getFullYear()}年${month + 1}月${day}日`
+                };
+              } else {
+                const nextYearOccurrence = new Date(today.getFullYear() + 1, month, day);
+                const nextDiffDays = Math.round((nextYearOccurrence.getTime() - today.getTime()) / msPerDay);
+                return {
+                  ...item,
+                  calcType: 'countdown',
+                  prefixText: '還有',
+                  diffDays: nextDiffDays,
+                  subNote: `下次：${today.getFullYear() + 1}年${month + 1}月${day}日`
+                };
+              }
+            } else {
+              const diffDays = Math.round((targetDate.getTime() - today.getTime()) / msPerDay);
+
+              if (diffDays === 0) {
+                return {
+                  ...item,
+                  calcType: 'today',
+                  prefixText: '',
+                  diffDays: 0
+                };
+              } else if (diffDays > 0) {
+                return {
+                  ...item,
+                  calcType: 'countdown',
+                  prefixText: '還有',
+                  diffDays: diffDays
+                };
+              } else {
+                return {
+                  ...item,
+                  calcType: 'past',
+                  prefixText: '已過去',
+                  diffDays: Math.abs(diffDays)
+                };
+              }
+            }
+          });
+        });
+
+        return {
+          events,
+          form,
+          addEvent,
+          deleteEvent,
+          computedEvents
+        };
+      }
+    }).mount('#app');
+  </script>
+</body>
+</html>
