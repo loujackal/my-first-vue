@@ -3,112 +3,121 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>拾光足跡 | 重要日子倒數與紀念</title>
+  <title>拾光 Time Gleaner — 拾光足跡</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Noto+Serif+TC:wght@400;600;700&family=Noto+Sans+TC:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
   <style>
     :root {
-      --bg: #f8fafc;
+      --bg-gradient: linear-gradient(180deg, #fdfbf7 0%, #f5efe6 100%);
       --card: #ffffff;
-      --text: #0f172a;
-      --muted: #64748b;
-      --primary: #4f46e5;
-      --primary-hover: #4338ca;
-      --primary-light: #eef2ff;
-      --border: #e2e8f0;
-      --danger: #ef4444;
-      --danger-light: #fef2f2;
-      --countdown-color: #0284c7;
-      --countdown-bg: #f0f9ff;
-      --past-color: #7c3aed;
-      --past-bg: #f5f3ff;
-      --today-color: #059669;
-      --today-bg: #ecfdf5;
-      --radius: 14px;
-      --shadow: 0 4px 18px -2px rgba(15, 23, 42, 0.05);
+      --text: #2c2825;
+      --muted: #786f66;
+      --primary: #a3704c;
+      --primary-hover: #885936;
+      --primary-light: #f7f1ea;
+      --border: #e8e1d7;
+      --border-hover: #d2c4b2;
+      --danger: #d9534f;
+      --danger-light: #fdf2f2;
+      --countdown-color: #b35c1e;
+      --countdown-bg: #fdf4ea;
+      --past-color: #5e527d;
+      --past-bg: #f3f0f7;
+      --today-color: #2d7a58;
+      --today-bg: #eef7f2;
+      --radius: 16px;
+      --shadow: 0 4px 20px -2px rgba(44, 40, 37, 0.05);
+      --shadow-hover: 0 10px 28px -4px rgba(163, 112, 76, 0.12);
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: 'Noto Sans TC', system-ui, sans-serif;
-      background: var(--bg);
+      background: var(--bg-gradient);
       color: var(--text);
-      line-height: 1.5;
+      line-height: 1.6;
       min-height: 100vh;
     }
-    .container { max-width: 760px; margin: 0 auto; padding: 2.5rem 1.25rem 4rem; }
-    .nav-bar { margin-bottom: 2rem; }
+    .container { max-width: 800px; margin: 0 auto; padding: 3rem 1.5rem 5rem; }
+    .nav-bar { margin-bottom: 2.25rem; }
     .back-link {
-      display: inline-flex; align-items: center; gap: 6px; color: var(--muted);
+      display: inline-flex; align-items: center; gap: 8px; color: var(--muted);
       text-decoration: none; font-size: 0.92rem; font-weight: 500;
-      padding: 6px 12px; background: #fff; border: 1px solid var(--border);
-      border-radius: 999px; transition: all 0.2s;
+      padding: 8px 16px; background: var(--card); border: 1px solid var(--border);
+      border-radius: 999px; transition: all 0.25s ease; box-shadow: 0 2px 6px rgba(0,0,0,0.02);
     }
-    .back-link:hover { color: var(--primary); border-color: #c7d2fe; background: var(--primary-light); }
-    .header { margin-bottom: 2rem; }
-    .header h1 { font-size: 2rem; font-weight: 700; color: #0f172a; display: flex; align-items: center; gap: 10px; }
-    .header p { color: var(--muted); font-size: 0.95rem; margin-top: 4px; }
+    .back-link:hover { color: var(--primary); border-color: var(--border-hover); background: var(--primary-light); transform: translateX(-3px); }
+    .header { margin-bottom: 2.5rem; text-align: left; }
+    .header h1 {
+      font-family: 'Noto Serif TC', serif; font-size: 2.1rem; font-weight: 700;
+      color: #231f1d; display: flex; align-items: center; gap: 12px; margin-bottom: 0.5rem;
+    }
+    .header p { color: var(--muted); font-size: 1.02rem; line-height: 1.6; }
     .form-card {
       background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
-      box-shadow: var(--shadow); padding: 1.5rem; margin-bottom: 2rem;
+      box-shadow: var(--shadow); padding: 1.75rem; margin-bottom: 2.5rem; transition: box-shadow 0.3s;
     }
-    .form-title { font-size: 1.05rem; font-weight: 700; margin-bottom: 1rem; color: #1e293b; }
-    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
-    @media (max-width: 580px) { .form-grid { grid-template-columns: 1fr; } }
-    .form-group label { display: block; font-size: 0.85rem; font-weight: 600; color: #475569; margin-bottom: 6px; }
+    .form-card:focus-within { box-shadow: var(--shadow-hover); border-color: var(--border-hover); }
+    .form-title { font-family: 'Noto Serif TC', serif; font-size: 1.15rem; font-weight: 700; margin-bottom: 1.25rem; color: #231f1d; display: flex; align-items: center; gap: 8px; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 1.25rem; }
+    @media (max-width: 600px) { .form-grid { grid-template-columns: 1fr; } }
+    .form-group label { display: block; font-size: 0.88rem; font-weight: 600; color: #4a443f; margin-bottom: 6px; }
     .form-input {
-      width: 100%; padding: 9px 12px; font-size: 0.95rem; border: 1px solid var(--border);
-      border-radius: 8px; background: #f8fafc; font-family: inherit;
+      width: 100%; padding: 10px 14px; font-size: 0.95rem; border: 1px solid var(--border);
+      border-radius: 10px; background: #faf8f5; font-family: inherit; color: var(--text); transition: all 0.2s;
     }
-    .form-input:focus { outline: none; border-color: var(--primary); background: #ffffff; }
+    .form-input:focus { outline: none; border-color: var(--primary); background: #ffffff; box-shadow: 0 0 0 3px rgba(163, 112, 76, 0.12); }
     .form-checkbox-row {
-      display: flex; align-items: center; gap: 8px; margin-bottom: 1.25rem;
-      cursor: pointer; font-size: 0.9rem; color: #334155;
+      display: flex; align-items: center; gap: 10px; margin-bottom: 1.5rem;
+      cursor: pointer; font-size: 0.92rem; color: #4a443f; user-select: none;
     }
-    .form-checkbox-row input[type="checkbox"] { width: 17px; height: 17px; accent-color: var(--primary); cursor: pointer; }
+    .form-checkbox-row input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--primary); cursor: pointer; border-radius: 4px; }
     .btn-submit {
-      width: 100%; background: var(--primary); color: #fff; border: none; border-radius: 9px;
-      padding: 11px 18px; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: background 0.2s;
+      width: 100%; background: var(--primary); color: #fff; border: none; border-radius: 10px;
+      padding: 12px 20px; font-size: 0.98rem; font-weight: 600; cursor: pointer; transition: all 0.25s ease;
+      box-shadow: 0 4px 12px rgba(163, 112, 76, 0.2);
     }
-    .btn-submit:hover { background: var(--primary-hover); }
-    .list-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
-    .list-title { font-size: 1.05rem; font-weight: 700; color: #1e293b; }
-    .list-count { font-size: 0.8rem; color: var(--muted); background: #e2e8f0; padding: 2px 8px; border-radius: 999px; }
-    .events-list { display: flex; flex-direction: column; gap: 1rem; }
+    .btn-submit:hover { background: var(--primary-hover); transform: translateY(-1px); box-shadow: 0 6px 16px rgba(163, 112, 76, 0.28); }
+    .list-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; }
+    .list-title { font-family: 'Noto Serif TC', serif; font-size: 1.2rem; font-weight: 700; color: #231f1d; }
+    .list-count { font-size: 0.82rem; color: var(--muted); background: var(--primary-light); border: 1px solid var(--border); padding: 3px 12px; border-radius: 999px; font-weight: 500; }
+    .events-list { display: flex; flex-direction: column; gap: 1.25rem; }
     .event-card {
       background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
-      box-shadow: var(--shadow); padding: 1.25rem 1.5rem; display: flex; align-items: center;
-      justify-content: space-between; gap: 1rem;
+      box-shadow: var(--shadow); padding: 1.5rem 1.75rem; display: flex; align-items: center;
+      justify-content: space-between; gap: 1.25rem; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
+    .event-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-hover); border-color: var(--border-hover); }
     .event-info { flex: 1; min-width: 0; }
-    .event-name-row { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; flex-wrap: wrap; }
-    .event-title { font-size: 1.1rem; font-weight: 700; color: #0f172a; }
-    .recurring-tag { font-size: 0.72rem; font-weight: 600; padding: 2px 7px; border-radius: 4px; background: #f1f5f9; color: #64748b; }
-    .event-date { font-size: 0.85rem; color: var(--muted); }
-    .event-calc { text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
-    .calc-badge { display: inline-flex; align-items: baseline; gap: 4px; padding: 6px 12px; border-radius: 8px; font-weight: 700; }
-    .calc-badge.countdown { background: var(--countdown-bg); color: var(--countdown-color); }
-    .calc-badge.past { background: var(--past-bg); color: var(--past-color); }
-    .calc-badge.today { background: var(--today-bg); color: var(--today-color); }
-    .calc-number { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; font-size: 1.35rem; line-height: 1; }
-    .calc-label { font-size: 0.88rem; }
+    .event-name-row { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; flex-wrap: wrap; }
+    .event-title { font-family: 'Noto Serif TC', serif; font-size: 1.18rem; font-weight: 700; color: #231f1d; }
+    .recurring-tag { font-size: 0.75rem; font-weight: 600; padding: 3px 9px; border-radius: 6px; background: var(--primary-light); color: var(--primary); border: 1px solid var(--border); }
+    .event-date { font-size: 0.88rem; color: var(--muted); }
+    .event-calc { text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+    .calc-badge { display: inline-flex; align-items: baseline; gap: 5px; padding: 8px 16px; border-radius: 10px; font-weight: 700; }
+    .calc-badge.countdown { background: var(--countdown-bg); color: var(--countdown-color); border: 1px solid rgba(179, 92, 30, 0.15); }
+    .calc-badge.past { background: var(--past-bg); color: var(--past-color); border: 1px solid rgba(94, 82, 125, 0.15); }
+    .calc-badge.today { background: var(--today-bg); color: var(--today-color); border: 1px solid rgba(45, 122, 88, 0.15); }
+    .calc-number { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; font-size: 1.45rem; line-height: 1; }
+    .calc-label { font-size: 0.9rem; }
     .btn-delete {
-      background: none; border: none; color: #94a3b8; cursor: pointer;
-      padding: 4px 8px; border-radius: 6px; font-size: 0.85rem;
+      background: none; border: none; color: #a0978d; cursor: pointer;
+      padding: 5px 10px; border-radius: 6px; font-size: 0.85rem;
       display: inline-flex; align-items: center; gap: 4px; transition: all 0.2s;
     }
     .btn-delete:hover { color: var(--danger); background: var(--danger-light); }
     .empty-state {
-      text-align: center; padding: 3rem 1rem; background: var(--card);
+      text-align: center; padding: 3.5rem 1.5rem; background: var(--card);
       border: 1px dashed var(--border); border-radius: var(--radius); color: var(--muted);
     }
-    .empty-icon { font-size: 2.5rem; margin-bottom: 0.5rem; }
-    @media (max-width: 580px) {
+    .empty-icon { font-size: 2.8rem; margin-bottom: 0.75rem; }
+    @media (max-width: 600px) {
+      .container { padding-top: 2rem; }
       .event-card { flex-direction: column; align-items: flex-start; }
       .event-calc {
         width: 100%; flex-direction: row; justify-content: space-between;
-        align-items: center; border-top: 1px solid #f1f5f9; padding-top: 0.75rem;
+        align-items: center; border-top: 1px solid var(--border); padding-top: 0.9rem;
       }
     }
   </style>
@@ -118,18 +127,18 @@
     <div class="nav-bar">
       <a href="index.html" class="back-link">
         <span>←</span>
-        <span>返回我的工具箱</span>
+        <span>返回拾光</span>
       </a>
     </div>
 
     <header class="header">
-      <h1><span>📅</span> 拾光足跡</h1>
-      <p>記錄走過的時光，倒數期盼的未來。自動計算重要日子天數。</p>
+      <h1><span>⏳</span> 拾光 Time Gleaner — 拾光足跡</h1>
+      <p>拾起走過的歲月軌跡，倒數期盼的璀璨未來。自動為您記錄每一個珍貴的日子。</p>
     </header>
 
     <!-- 新增事件表單 -->
     <section class="form-card">
-      <div class="form-title">➕ 新增重要日子</div>
+      <div class="form-title">✦ 新增拾光事件</div>
       <form @submit.prevent="addEvent">
         <div class="form-grid">
           <div class="form-group">
@@ -139,7 +148,7 @@
               v-model.trim="form.name"
               type="text"
               class="form-input"
-              placeholder="例如：生日、交往紀念日、畢業倒數"
+              placeholder="例如：生日、週年紀念、考試倒數"
               required
             >
           </div>
@@ -157,11 +166,11 @@
 
         <label class="form-checkbox-row">
           <input v-model="form.isRecurring" type="checkbox">
-          <span>每年循環（如生日、結婚紀念日，每年自動計算倒數）</span>
+          <span>每年循環紀念（如生日、週年紀念日，每年自動更新倒數）</span>
         </label>
 
         <button type="submit" class="btn-submit">
-          新增日子
+          新增至拾光足跡
         </button>
       </form>
     </section>
@@ -169,13 +178,13 @@
     <!-- 事件清單 -->
     <section>
       <div class="list-header">
-        <div class="list-title">我的日子</div>
-        <span class="list-count">{{ events.length }} 個事件</span>
+        <div class="list-title">我的拾光紀錄</div>
+        <span class="list-count">{{ events.length }} 個時光節點</span>
       </div>
 
       <div v-if="events.length === 0" class="empty-state">
         <div class="empty-icon">🍃</div>
-        <p>目前尚未建立任何重要日子，快在上方新增第一個吧！</p>
+        <p>尚無拾光紀錄，快在上方點亮第一個特別的日子吧！</p>
       </div>
 
       <div v-else class="events-list">
@@ -225,9 +234,9 @@
     createApp({
       setup() {
         const defaultEvents = [
-          { id: 1, name: '2027新年倒數', date: '2027-01-01', isRecurring: false },
+          { id: 1, name: '2027 新年倒數', date: '2027-01-01', isRecurring: false },
           { id: 2, name: '我的生日', date: '2000-09-15', isRecurring: true },
-          { id: 3, name: '開始學 Vue', date: '2024-01-01', isRecurring: false }
+          { id: 3, name: '開啟拾光之旅', date: '2024-01-01', isRecurring: false }
         ];
 
         const events = ref([]);
